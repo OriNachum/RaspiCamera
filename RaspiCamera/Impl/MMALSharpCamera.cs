@@ -28,8 +28,7 @@ namespace RaspiCamera.Impl
             {
                 // Singleton initialized lazily. Reference once in your application.
                 MMALCamera cam = this.MMALSharpCameraInstance;
-
-                using (var imgCaptureHandler = new ImageStreamCaptureHandler(directory, ImageExt))
+                using (var imgCaptureHandler = new RunningImageStreamCaptureHandler(directory, ImageExt))
                 {
                     var cts = new CancellationTokenSource(duration);
                     var timelapse = new Timelapse
