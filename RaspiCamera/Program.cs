@@ -25,13 +25,15 @@ namespace RaspiCamera
                 {
                     await camera.TakePictureAsync($"Unobscure.{pictureFilePath}");
                     await camera.TakeVideoAsync($"Unobscure.{videoFilePath}");
+
+                    Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(UnobscureCamera)} Completed");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{nameof(Program)} {nameof(Main)} Failed");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(UnobscureCamera)} Failed");
                 Console.WriteLine($"{nameof(Program)} {nameof(Main)} {ex.ToString()}");
-                Console.WriteLine($"{nameof(Program)} {nameof(Main)} Failed");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(UnobscureCamera)} Failed");
             }
 
             try
@@ -40,13 +42,32 @@ namespace RaspiCamera
                 {
                     await camera.TakePictureAsync($"MMALSharp.{pictureFilePath}");
                     await camera.TakeVideoAsync($"MMALSharp.{videoFilePath}");
+
+                    Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(MMALSharpCamera)} Completed");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{nameof(Program)} {nameof(Main)} Failed");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(MMALSharpCamera)} Failed");
                 Console.WriteLine($"{nameof(Program)} {nameof(Main)} {ex.ToString()}");
-                Console.WriteLine($"{nameof(Program)} {nameof(Main)} Failed");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(MMALSharpCamera)} Failed");
+            }
+
+            try
+            {
+                using (var camera = new PythonCamera())
+                {
+                    await camera.TakePictureAsync($"Python.{pictureFilePath}");
+                    await camera.TakeVideoAsync($"Python.{videoFilePath}");
+
+                    Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(PythonCamera)} Completed");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(PythonCamera)} Failed");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {ex.ToString()}");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(PythonCamera)} Failed");
             }
         }
     }
