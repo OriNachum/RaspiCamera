@@ -19,6 +19,18 @@ namespace RaspiCamera.Impl
             this.MMALSharpCameraInstance = MMALCamera.Instance;
         }
 
+        public async Task TakePicturesAsync(string filePathFormat, TimeSpan duration, int msWaitBetweenPictures)
+        {
+            var startTime = DateTime.UtcNow;
+            while ((DateTime.UtcNow - startTime) < duration)
+            {
+                string filePath = string.Format(filePathFormat, (DateTime.UtcNow - startTime).TotalMilliseconds);
+                await TakePictureAsync(filePath);
+                Thread.Sleep(msWaitBetweenPictures);
+            }
+        }
+
+
         public async Task TakePictureAsync(string filePath)
         {
             try

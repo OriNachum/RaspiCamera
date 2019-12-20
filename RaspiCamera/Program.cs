@@ -19,10 +19,8 @@ namespace RaspiCamera
             string pictureFilePath = string.Format(PictureFilePathFormat, millisecondsSinceYearStart);
             string videoFilePath = string.Format(VideoFilePathFormat, millisecondsSinceYearStart);
 
-            await TestUnobscureCameraAsync(pictureFilePath, videoFilePath);
-
+            //await TestUnobscureCameraAsync(pictureFilePath, videoFilePath);
             await TestMMALSharpCameraAsync(pictureFilePath, videoFilePath);
-
             //await TestPythonAsync(pictureFilePath, videoFilePath);
         }
 
@@ -54,7 +52,7 @@ namespace RaspiCamera
                 {
                     await camera.TakePictureAsync($"MMALSharp.{pictureFilePath}");
                     await camera.TakeVideoAsync($"MMALSharp.{videoFilePath}");
-
+                    await camera.TakePicturesAsync($"MMALSharp.PictureStream.{PictureFilePathFormat}", TimeSpan.FromSeconds(30), 250);
                     Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(MMALSharpCamera)} Completed");
                 }
             }
