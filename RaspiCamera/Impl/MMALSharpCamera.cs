@@ -1,4 +1,5 @@
 ﻿using MMALSharp;
+using MMALSharp.Config;
 using MMALSharp.Handlers;
 using MMALSharp.Native;
 using System;
@@ -52,9 +53,14 @@ namespace RaspiCamera.Impl
                 // using (var vidCaptureHandler = new VideoStreamCaptureHandler("/home/pi/videos/", "avi"))
                 using (var vidCaptureHandler = new VideoStreamCaptureHandler(filePath))
                 {
-                    var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3));
-
-                    await cam.TakeVideo(vidCaptureHandler, cts.Token);
+                    
+                    var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+                    var split = new Split
+                    {
+                        Mode = TimelapseMode.Second,
+                        Value = 15,
+                    };
+                    await cam.TakeVideo(vidCaptureHandler, cts.Token, split);
                 }
 
                 // Cleanup disposes all unmanaged resources and unloads Broadcom library. To be called when no more processing is to be done

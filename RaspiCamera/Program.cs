@@ -19,23 +19,35 @@ namespace RaspiCamera
             string pictureFilePath = string.Format(PictureFilePathFormat, millisecondsSinceYearStart);
             string videoFilePath = string.Format(VideoFilePathFormat, millisecondsSinceYearStart);
 
+            await TestUnobscureCameraAsync(pictureFilePath, videoFilePath);
+
+            await TestMMALSharpCameraAsync(pictureFilePath, videoFilePath);
+
+            //await TestPythonAsync(pictureFilePath, videoFilePath);
+        }
+
+        private static async Task TestPythonAsync(string pictureFilePath, string videoFilePath)
+        {
             try
             {
-                using (var camera = new UnobscureCamera())
+                using (var camera = new PythonCamera())
                 {
-                    await camera.TakePictureAsync($"Unobscure.{pictureFilePath}");
-                    await camera.TakeVideoAsync($"Unobscure.{videoFilePath}");
+                    await camera.TakePictureAsync($"Python.{pictureFilePath}");
+                    await camera.TakeVideoAsync($"Python.{videoFilePath}");
 
-                    Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(UnobscureCamera)} Completed");
+                    Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(PythonCamera)} Completed");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(UnobscureCamera)} Failed");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(PythonCamera)} Failed");
                 Console.WriteLine($"{nameof(Program)} {nameof(Main)} {ex.ToString()}");
-                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(UnobscureCamera)} Failed");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(PythonCamera)} Failed");
             }
+        }
 
+        private static async Task TestMMALSharpCameraAsync(string pictureFilePath, string videoFilePath)
+        {
             try
             {
                 using (var camera = new MMALSharpCamera())
@@ -52,22 +64,25 @@ namespace RaspiCamera
                 Console.WriteLine($"{nameof(Program)} {nameof(Main)} {ex.ToString()}");
                 Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(MMALSharpCamera)} Failed");
             }
+        }
 
+        private static async Task TestUnobscureCameraAsync(string pictureFilePath, string videoFilePath)
+        {
             try
             {
-                using (var camera = new PythonCamera())
+                using (var camera = new UnobscureCamera())
                 {
-                    await camera.TakePictureAsync($"Python.{pictureFilePath}");
-                    await camera.TakeVideoAsync($"Python.{videoFilePath}");
+                    await camera.TakePictureAsync($"Unobscure.{pictureFilePath}");
+                    await camera.TakeVideoAsync($"Unobscure.{videoFilePath}");
 
-                    Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(PythonCamera)} Completed");
+                    Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(UnobscureCamera)} Completed");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(PythonCamera)} Failed");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(UnobscureCamera)} Failed");
                 Console.WriteLine($"{nameof(Program)} {nameof(Main)} {ex.ToString()}");
-                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(PythonCamera)} Failed");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(UnobscureCamera)} Failed");
             }
         }
     }
