@@ -42,7 +42,7 @@ namespace RaspiCamera
                 return 1;
             });
             CameraController.Instance.CloseVideoStream();
-            Console.WriteLine($"Wrote video to: {videoFilePath}");
+            Console.WriteLine($"Wrote video to: {videoFilePath}, size of {bytesWrittenSoFar}");
         }
 
         private static async Task TakePictureAsync()
