@@ -30,7 +30,7 @@ namespace RaspiCamera.Impl
                 MMALCameraConfig.StillResolution = new Resolution(1080, 920);
                 cam.ConfigureCameraSettings();
 
-                using (var imgCaptureHandler = new ImageStreamCaptureHandler(filename))
+                using (var imgCaptureHandler = new IndexedImageStreamCaptureHandler(filename))
                 {
                     Console.WriteLine($"Current filename in handler: {imgCaptureHandler.CurrentFilename}"); 
 
