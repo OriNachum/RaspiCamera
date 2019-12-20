@@ -25,11 +25,13 @@ namespace RaspiCamera.Impl
 
         public async Task TakePicturesAsync(string directory, TimeSpan duration, int msWaitBetweenPictures)
         {
-            MMALCameraConfig.StillResolution = new Resolution(1080, 920);
             try
             {
                 // Singleton initialized lazily. Reference once in your application.
                 MMALCamera cam = this.MMALSharpCameraInstance;
+                MMALCameraConfig.StillResolution = new Resolution(1080, 920);
+                cam.ConfigureCameraSettings();
+
                 using (var imgCaptureHandler = new ImageStreamCaptureHandler(directory, ImageExt))
                 {
                     var cts = new CancellationTokenSource(duration);
