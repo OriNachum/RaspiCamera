@@ -1,4 +1,5 @@
 ﻿using MMALSharp;
+using MMALSharp.Common.Utility;
 using MMALSharp.Config;
 using MMALSharp.Handlers;
 using MMALSharp.Native;
@@ -24,11 +25,12 @@ namespace RaspiCamera.Impl
 
         public async Task TakePicturesAsync(string directory, TimeSpan duration, int msWaitBetweenPictures)
         {
+            MMALCameraConfig.StillResolution = Resolution.As1080p;
             try
             {
                 // Singleton initialized lazily. Reference once in your application.
                 MMALCamera cam = this.MMALSharpCameraInstance;
-                using (var imgCaptureHandler = new RunningImageStreamCaptureHandler(directory, ImageExt))
+                using (var imgCaptureHandler = new ImageStreamCaptureHandler(directory, ImageExt))
                 {
                     var cts = new CancellationTokenSource(duration);
                     var timelapse = new Timelapse
