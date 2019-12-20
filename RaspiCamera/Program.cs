@@ -13,9 +13,9 @@ namespace RaspiCamera
 
         static async void Main(string[] args)
         {
-            TakePictureAsync();
+            await TakePictureAsync();
 
-            TakeVideoAsync();
+            await TakeVideoAsync();
 
         }
 
