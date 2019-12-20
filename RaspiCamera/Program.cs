@@ -52,7 +52,7 @@ namespace RaspiCamera
                 {
                     await camera.TakePictureAsync($"MMALSharp.{pictureFilePath}");
                     // await camera.TakeVideoAsync($"MMALSharp.{videoFilePath}");
-                    await camera.TakePicturesAsync($"MMALSharp.PictureStream.{PictureFilePathFormat}", TimeSpan.FromSeconds(30), 250);
+                    await camera.TakePicturesAsync($"./MMALSharp/PictureStream/", TimeSpan.FromSeconds(30), 250);
                     Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(MMALSharpCamera)} Completed");
                 }
             }
