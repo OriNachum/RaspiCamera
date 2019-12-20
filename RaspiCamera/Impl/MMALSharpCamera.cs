@@ -46,7 +46,7 @@ namespace RaspiCamera.Impl
 
                 // Cleanup disposes all unmanaged resources and unloads Broadcom library. To be called when no more processing is to be done
                 // on the camera.
-                Console.WriteLine($"Wrote picture to: {filename} with ext. {ImageExt}");
+                Console.WriteLine($"Wrote picture to: {filename} with running index");
             }
             catch (Exception ex)
             {
