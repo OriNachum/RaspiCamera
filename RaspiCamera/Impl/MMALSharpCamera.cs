@@ -4,6 +4,7 @@ using MMALSharp.Handlers;
 using MMALSharp.Native;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace RaspiCamera.Impl
 {
     public class MMALSharpCamera : IRaspiCamera, IDisposable
     {
+        private const string ImageExt = "jpg";
+
         public MMALCamera MMALSharpCameraInstance { get; }
 
         public MMALSharpCamera()
@@ -19,14 +22,34 @@ namespace RaspiCamera.Impl
             this.MMALSharpCameraInstance = MMALCamera.Instance;
         }
 
-        public async Task TakePicturesAsync(string filePathFormat, TimeSpan duration, int msWaitBetweenPictures)
+        public async Task TakePicturesAsync(string directory, TimeSpan duration, int msWaitBetweenPictures)
         {
-            var startTime = DateTime.UtcNow;
-            while ((DateTime.UtcNow - startTime) < duration)
+            try
             {
-                string filePath = string.Format(filePathFormat, (DateTime.UtcNow - startTime).TotalMilliseconds);
-                await TakePictureAsync(filePath);
-                Thread.Sleep(msWaitBetweenPictures);
+                // Singleton initialized lazily. Reference once in your application.
+                MMALCamera cam = this.MMALSharpCameraInstance;
+
+                using (var imgCaptureHandler = new ImageStreamCaptureHandler(directory, ImageExt))
+                {
+                    var cts = new CancellationTokenSource(duration);
+                    var timelapse = new Timelapse
+                    {
+                        Mode = TimelapseMode.Millisecond,
+                        Value = msWaitBetweenPictures,
+                        CancellationToken = cts.Token
+                    };
+                    await cam.TakePictureTimelapse(imgCaptureHandler, MMALEncoding.JPEG, MMALEncoding.I420, timelapse);
+                }
+
+                // Cleanup disposes all unmanaged resources and unloads Broadcom library. To be called when no more processing is to be done
+                // on the camera.
+                Console.WriteLine($"Wrote picture to: {directory} with ext. {ImageExt}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{nameof(MMALSharpCamera)} {nameof(TakePictureAsync)} Failed");
+                Console.WriteLine($"{nameof(MMALSharpCamera)} {nameof(TakePictureAsync)} {ex.ToString()}");
+                Console.WriteLine($"{nameof(MMALSharpCamera)} {nameof(TakePictureAsync)} Failed");
             }
         }
 
