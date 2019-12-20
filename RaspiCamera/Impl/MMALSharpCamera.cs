@@ -13,35 +13,55 @@ namespace RaspiCamera.Impl
     {
         public async Task TakePictureAsync(string filePath)
         {
-            // Singleton initialized lazily. Reference once in your application.
-            MMALCamera cam = MMALCamera.Instance;
-
-            using (var imgCaptureHandler = new ImageStreamCaptureHandler(filePath))
+            try
             {
-                await cam.TakePicture(imgCaptureHandler, MMALEncoding.JPEG, MMALEncoding.I420);
-            }
+                // Singleton initialized lazily. Reference once in your application.
+                MMALCamera cam = MMALCamera.Instance;
 
-            // Cleanup disposes all unmanaged resources and unloads Broadcom library. To be called when no more processing is to be done
-            // on the camera.
-            cam.Cleanup();
+                using (var imgCaptureHandler = new ImageStreamCaptureHandler(filePath))
+                {
+                    await cam.TakePicture(imgCaptureHandler, MMALEncoding.JPEG, MMALEncoding.I420);
+                }
+
+                // Cleanup disposes all unmanaged resources and unloads Broadcom library. To be called when no more processing is to be done
+                // on the camera.
+                cam.Cleanup();
+                Console.WriteLine($"Wrote picture to: {filePath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{nameof(MMALSharpCamera)} {nameof(TakePictureAsync)} Failed");
+                Console.WriteLine($"{nameof(MMALSharpCamera)} {nameof(TakePictureAsync)} {ex.ToString()}");
+                Console.WriteLine($"{nameof(MMALSharpCamera)} {nameof(TakePictureAsync)} Failed");
+            }
         }
 
         public async Task TakeVideoAsync(string filePath)
         {
-            // Singleton initialized lazily. Reference once in your application.
-            MMALCamera cam = MMALCamera.Instance;
-
-            // using (var vidCaptureHandler = new VideoStreamCaptureHandler("/home/pi/videos/", "avi"))
-            using (var vidCaptureHandler = new VideoStreamCaptureHandler(filePath))
+            try
             {
-                var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3));
+                // Singleton initialized lazily. Reference once in your application.
+                MMALCamera cam = MMALCamera.Instance;
 
-                await cam.TakeVideo(vidCaptureHandler, cts.Token);
+                // using (var vidCaptureHandler = new VideoStreamCaptureHandler("/home/pi/videos/", "avi"))
+                using (var vidCaptureHandler = new VideoStreamCaptureHandler(filePath))
+                {
+                    var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3));
+
+                    await cam.TakeVideo(vidCaptureHandler, cts.Token);
+                }
+
+                // Cleanup disposes all unmanaged resources and unloads Broadcom library. To be called when no more processing is to be done
+                // on the camera.
+                cam.Cleanup();
+                Console.WriteLine($"Wrote video to: {filePath}");
             }
-
-            // Cleanup disposes all unmanaged resources and unloads Broadcom library. To be called when no more processing is to be done
-            // on the camera.
-            cam.Cleanup();
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{nameof(MMALSharpCamera)} {nameof(TakeVideoAsync)} Failed");
+                Console.WriteLine($"{nameof(MMALSharpCamera)} {nameof(TakeVideoAsync)} {ex.ToString()}");
+                Console.WriteLine($"{nameof(MMALSharpCamera)} {nameof(TakeVideoAsync)} Failed");
+            }
         }
     }
 }
