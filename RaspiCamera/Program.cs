@@ -11,7 +11,7 @@ namespace RaspiCamera
         private const string FilePath = "test.jpeg";
         private const string VideoFilePathFormat = "test.{0}.jpeg";
 
-        static async void Main(string[] args)
+        static async Task Main(string[] args)
         {
             await TakePictureAsync();
 
