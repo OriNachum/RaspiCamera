@@ -19,16 +19,34 @@ namespace RaspiCamera
             string pictureFilePath = string.Format(PictureFilePathFormat, millisecondsSinceYearStart);
             string videoFilePath = string.Format(VideoFilePathFormat, millisecondsSinceYearStart);
 
-            using (var camera = new UnobscureCamera())
+            try
             {
-                await camera.TakePictureAsync($"Unobscure.{pictureFilePath}");
-                await camera.TakeVideoAsync($"Unobscure.{videoFilePath}");
+                using (var camera = new UnobscureCamera())
+                {
+                    await camera.TakePictureAsync($"Unobscure.{pictureFilePath}");
+                    await camera.TakeVideoAsync($"Unobscure.{videoFilePath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} Failed");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {ex.ToString()}");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} Failed");
             }
 
-            using (var camera = new MMALSharpCamera())
+            try
             {
-                await camera.TakePictureAsync($"MMALSharp.{pictureFilePath}");
-                await camera.TakeVideoAsync($"MMALSharp.{videoFilePath}");
+                using (var camera = new MMALSharpCamera())
+                {
+                    await camera.TakePictureAsync($"MMALSharp.{pictureFilePath}");
+                    await camera.TakeVideoAsync($"MMALSharp.{videoFilePath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} Failed");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {ex.ToString()}");
+                Console.WriteLine($"{nameof(Program)} {nameof(Main)} Failed");
             }
         }
     }
