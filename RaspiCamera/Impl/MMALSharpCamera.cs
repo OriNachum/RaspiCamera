@@ -9,14 +9,21 @@ using System.Threading.Tasks;
 
 namespace RaspiCamera.Impl
 {
-    public class MMALSharpCamera : IRaspiCamera
+    public class MMALSharpCamera : IRaspiCamera, IDisposable
     {
+        public MMALCamera MMALSharpCameraInstance { get; }
+
+        public MMALSharpCamera()
+        {
+            this.MMALSharpCameraInstance = MMALCamera.Instance;
+        }
+
         public async Task TakePictureAsync(string filePath)
         {
             try
             {
                 // Singleton initialized lazily. Reference once in your application.
-                MMALCamera cam = MMALCamera.Instance;
+                MMALCamera cam = this.MMALSharpCameraInstance;
 
                 using (var imgCaptureHandler = new ImageStreamCaptureHandler(filePath))
                 {
@@ -25,7 +32,6 @@ namespace RaspiCamera.Impl
 
                 // Cleanup disposes all unmanaged resources and unloads Broadcom library. To be called when no more processing is to be done
                 // on the camera.
-                cam.Cleanup();
                 Console.WriteLine($"Wrote picture to: {filePath}");
             }
             catch (Exception ex)
@@ -41,7 +47,7 @@ namespace RaspiCamera.Impl
             try
             {
                 // Singleton initialized lazily. Reference once in your application.
-                MMALCamera cam = MMALCamera.Instance;
+                MMALCamera cam = this.MMALSharpCameraInstance;
 
                 // using (var vidCaptureHandler = new VideoStreamCaptureHandler("/home/pi/videos/", "avi"))
                 using (var vidCaptureHandler = new VideoStreamCaptureHandler(filePath))
@@ -62,6 +68,11 @@ namespace RaspiCamera.Impl
                 Console.WriteLine($"{nameof(MMALSharpCamera)} {nameof(TakeVideoAsync)} {ex.ToString()}");
                 Console.WriteLine($"{nameof(MMALSharpCamera)} {nameof(TakeVideoAsync)} Failed");
             }
+        }
+
+        public void Dispose()
+        {
+            this.MMALSharpCameraInstance.Cleanup();
         }
     }
 }

@@ -65,6 +65,9 @@ namespace RaspiCamera.Impl
             }
         }
 
+        public void Dispose()
+        {
 
+        }
     }
 }

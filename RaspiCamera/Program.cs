@@ -19,13 +19,17 @@ namespace RaspiCamera
             string pictureFilePath = string.Format(PictureFilePathFormat, millisecondsSinceYearStart);
             string videoFilePath = string.Format(VideoFilePathFormat, millisecondsSinceYearStart);
 
-            IRaspiCamera camera = new UnobscureCamera();
-            await camera.TakePictureAsync($"Unobscure.{pictureFilePath}");
-            await camera.TakeVideoAsync($"Unobscure.{videoFilePath}");
+            using (var camera = new UnobscureCamera())
+            {
+                await camera.TakePictureAsync($"Unobscure.{pictureFilePath}");
+                await camera.TakeVideoAsync($"Unobscure.{videoFilePath}");
+            }
 
-            camera = new MMALSharpCamera();
-            await camera.TakePictureAsync($"MMALSharp.{pictureFilePath}");
-            await camera.TakeVideoAsync($"MMALSharp.{videoFilePath}");
+            using (var camera = new MMALSharpCamera())
+            {
+                await camera.TakePictureAsync($"MMALSharp.{pictureFilePath}");
+                await camera.TakeVideoAsync($"MMALSharp.{videoFilePath}");
+            }
         }
     }
 }

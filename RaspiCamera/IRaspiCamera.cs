@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace RaspiCamera
 {
-    interface IRaspiCamera
+    interface IRaspiCamera : IDisposable
     {
         Task TakeVideoAsync(string filePath);
 
