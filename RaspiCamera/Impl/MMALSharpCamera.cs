@@ -25,7 +25,7 @@ namespace RaspiCamera.Impl
 
         public async Task TakePicturesAsync(string directory, TimeSpan duration, int msWaitBetweenPictures)
         {
-            MMALCameraConfig.StillResolution = Resolution.As1080p;
+            MMALCameraConfig.StillResolution = new Resolution(1080, 920);
             try
             {
                 // Singleton initialized lazily. Reference once in your application.
