@@ -2,39 +2,58 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace RaspiCamera
 {
     class Program
     {
         private const string FilePath = "test.jpeg";
-        private const string VideoFilePathFormat = "test{0}.jpeg";
+        private const string VideoFilePathFormat = "test.{0}.jpeg";
 
-        static void Main(string[] args)
+        static async void Main(string[] args)
         {
-            var imageJpeg = CameraController.Instance.CaptureImageJpeg(1024, 768);
-            using (var fs = new FileStream(FilePath, FileMode.Create, FileAccess.Write))
-            {
-                fs.Write(imageJpeg, 0, imageJpeg.Length);
-            }
-            Console.WriteLine($"Wrote image to: {FilePath}");
+            TakePictureAsync();
 
-            var millisecondsSinceYearStart = (new DateTime(DateTime.UtcNow.Year, 0, 0) - DateTime.UtcNow).TotalMilliseconds;
+            TakeVideoAsync();
+
+        }
+
+        private static async Task TakeVideoAsync()
+        {
+            var millisecondsSinceYearStart = (DateTime.UtcNow - new DateTime(DateTime.UtcNow.Year, 1, 1)).TotalMilliseconds;
             string videoFilePath = string.Format(VideoFilePathFormat, millisecondsSinceYearStart);
             var bytesWrittenSoFar = 0;
-            CameraController.Instance.OpenVideoStream(x =>
+            using (var fs = new FileStream(videoFilePath, FileMode.Create, FileAccess.Write))
             {
-                using (var fs = new FileStream(videoFilePath, FileMode.Create, FileAccess.Write))
+                CameraController.Instance.OpenVideoStream(x =>
                 {
                     var chunkSize = x.Length;
                     fs.Write(x, bytesWrittenSoFar, chunkSize);
                     bytesWrittenSoFar += chunkSize;
-                }
+                }, () =>
+                {
+                    fs.Flush(flushToDisk: true);
+                });
+            }
+            await Task.FromResult(1).ContinueWith((x) => 
+            {
+                Thread.Sleep(3000);
+                return 1;
             });
-            Thread.Sleep(3000);
             CameraController.Instance.CloseVideoStream();
             Console.WriteLine($"Wrote video to: {videoFilePath}");
+        }
 
+        private static async Task TakePictureAsync()
+        {
+            var imageJpeg = await CameraController.Instance.CaptureImageJpegAsync(1024, 768);
+            using (var fs = new FileStream(FilePath, FileMode.Create, FileAccess.ReadWrite))
+            {
+                fs.Write(imageJpeg, 0, imageJpeg.Length);
+                fs.Flush(flushToDisk: true);
+            }
+            Console.WriteLine($"Wrote image to: {FilePath}, size of {imageJpeg.Length}");
         }
     }
 }
