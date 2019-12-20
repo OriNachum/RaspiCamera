@@ -6,12 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MMALSharp" Version="0.5.1" />
-    <PackageReference Include="Unosquare.Raspberry.IO" Version="0.27.0" />
+    <Folder Include="Resources\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <ProjectReference Include="..\..\..\MMALSharp\src\MMALSharp\MMALSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

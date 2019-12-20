@@ -1,5 +1,4 @@
-﻿using Unosquare.RaspberryIO.Camera;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,7 +49,7 @@ namespace RaspiCamera
             {
                 using (var camera = new MMALSharpCamera())
                 {
-                    await camera.TakePictureAsync($"MMALSharp.{pictureFilePath}");
+                    // await camera.TakePictureAsync($"MMALSharp.{pictureFilePath}");
                     // await camera.TakeVideoAsync($"MMALSharp.{videoFilePath}");
                     await camera.TakePicturesAsync($"./MMALSharp/PictureStream/picture.jpg", TimeSpan.FromSeconds(30), 250);
                     Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(MMALSharpCamera)} Completed");
@@ -61,26 +60,6 @@ namespace RaspiCamera
                 Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(MMALSharpCamera)} Failed");
                 Console.WriteLine($"{nameof(Program)} {nameof(Main)} {ex.ToString()}");
                 Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(MMALSharpCamera)} Failed");
-            }
-        }
-
-        private static async Task TestUnobscureCameraAsync(string pictureFilePath, string videoFilePath)
-        {
-            try
-            {
-                using (var camera = new UnobscureCamera())
-                {
-                    await camera.TakePictureAsync($"Unobscure.{pictureFilePath}");
-                    await camera.TakeVideoAsync($"Unobscure.{videoFilePath}");
-
-                    Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(UnobscureCamera)} Completed");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(UnobscureCamera)} Failed");
-                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {ex.ToString()}");
-                Console.WriteLine($"{nameof(Program)} {nameof(Main)} {nameof(UnobscureCamera)} Failed");
             }
         }
     }
