@@ -1,6 +1,7 @@
 ﻿using Unosquare.RaspberryIO.Camera;
 using System;
 using System.IO;
+using System.Threading;
 
 namespace RaspiCamera
 {
@@ -18,20 +19,21 @@ namespace RaspiCamera
             }
             Console.WriteLine($"Wrote image to: {FilePath}");
 
+            var millisecondsSinceYearStart = (new DateTime(DateTime.UtcNow.Year, 0, 0) - DateTime.UtcNow).TotalMilliseconds;
+            string videoFilePath = string.Format(VideoFilePathFormat, millisecondsSinceYearStart);
+            var bytesWrittenSoFar = 0;
             CameraController.Instance.OpenVideoStream(x =>
             {
-                var millisecondsSinceYearStart = (new DateTime(DateTime.UtcNow.Year, 0, 0) - DateTime.UtcNow).TotalMilliseconds;
-                string videoFilePath = string.Format(VideoFilePathFormat, millisecondsSinceYearStart);
                 using (var fs = new FileStream(videoFilePath, FileMode.Create, FileAccess.Write))
                 {
-                    fs.Write(imageJpeg, 0, imageJpeg.Length);
+                    var chunkSize = x.Length;
+                    fs.Write(x, bytesWrittenSoFar, chunkSize);
+                    bytesWrittenSoFar += chunkSize;
                 }
             });
-            using (var fs = new FileStream(FilePath, FileMode.Create, FileAccess.Write))
-            {
-                fs.Write(imageJpeg, 0, imageJpeg.Length);
-            }
-            Console.WriteLine($"Wrote image to: {FilePath}");
+            Thread.Sleep(3000);
+            CameraController.Instance.CloseVideoStream();
+            Console.WriteLine($"Wrote video to: {videoFilePath}");
 
         }
     }
