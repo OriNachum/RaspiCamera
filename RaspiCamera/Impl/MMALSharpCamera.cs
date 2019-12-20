@@ -14,8 +14,6 @@ namespace RaspiCamera.Impl
 {
     public class MMALSharpCamera : IRaspiCamera, IDisposable
     {
-        private const string ImageExt = "jpg";
-
         public MMALCamera MMALSharpCameraInstance { get; }
 
         public MMALSharpCamera()
@@ -23,7 +21,7 @@ namespace RaspiCamera.Impl
             this.MMALSharpCameraInstance = MMALCamera.Instance;
         }
 
-        public async Task TakePicturesAsync(string directory, TimeSpan duration, int msWaitBetweenPictures)
+        public async Task TakePicturesAsync(string filename, TimeSpan duration, int msWaitBetweenPictures)
         {
             try
             {
@@ -32,8 +30,10 @@ namespace RaspiCamera.Impl
                 MMALCameraConfig.StillResolution = new Resolution(1080, 920);
                 cam.ConfigureCameraSettings();
 
-                using (var imgCaptureHandler = new ImageStreamCaptureHandler(directory, ImageExt))
+                using (var imgCaptureHandler = new ImageStreamCaptureHandler(filename))
                 {
+                    Console.WriteLine($"Current filename in handler: {imgCaptureHandler.CurrentFilename}"); 
+
                     var cts = new CancellationTokenSource(duration);
                     var timelapse = new Timelapse
                     {
@@ -46,7 +46,7 @@ namespace RaspiCamera.Impl
 
                 // Cleanup disposes all unmanaged resources and unloads Broadcom library. To be called when no more processing is to be done
                 // on the camera.
-                Console.WriteLine($"Wrote picture to: {directory} with ext. {ImageExt}");
+                Console.WriteLine($"Wrote picture to: {filename} with ext. {ImageExt}");
             }
             catch (Exception ex)
             {
