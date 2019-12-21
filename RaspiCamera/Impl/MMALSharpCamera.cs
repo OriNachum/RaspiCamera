@@ -113,7 +113,7 @@ namespace RaspiCamera.Impl
 
         public void Dispose()
         {
-            this.MMALSharpCameraInstance.Cleanup();
+            // this.MMALSharpCameraInstance.Cleanup();
         }
     }
 }
