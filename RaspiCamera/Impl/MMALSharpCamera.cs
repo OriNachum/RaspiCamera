@@ -29,7 +29,7 @@ namespace RaspiCamera.Impl
 
                 using (var imgCaptureHandler = new IndexedImageStreamCaptureHandler(filename))
                 {
-                    Console.WriteLine($"Current filename in handler: {imgCaptureHandler.CurrentFilename}"); 
+                    Console.WriteLine($"Current filename in handler: {imgCaptureHandler.CurrentFilename}");
 
                     var cts = new CancellationTokenSource(duration);
                     var timelapse = new Timelapse
@@ -88,7 +88,7 @@ namespace RaspiCamera.Impl
                 // using (var vidCaptureHandler = new VideoStreamCaptureHandler("/home/pi/videos/", "avi"))
                 using (var vidCaptureHandler = new VideoStreamCaptureHandler(filePath))
                 {
-                    
+
                     var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
                     var split = new Split
                     {
@@ -100,7 +100,7 @@ namespace RaspiCamera.Impl
 
                 // Cleanup disposes all unmanaged resources and unloads Broadcom library. To be called when no more processing is to be done
                 // on the camera.
-                cam.Cleanup();
+//                cam.Cleanup();
                 Console.WriteLine($"Wrote video to: {filePath}");
             }
             catch (Exception ex)
